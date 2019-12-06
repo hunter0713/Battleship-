@@ -78,7 +78,7 @@ bool Ship::coordCheck(int xPos, int yPos)
 	for(int i = 0; i < size; i++)
 	{
 
-		if(yPos == xPositions[i] && xPos == yPositions[i])
+		if(xPos == xPositions[i] && yPos == yPositions[i])
 		{
 			return(true);//returns true if the coordinates given are equal to a ship's segment coordinates
 		}

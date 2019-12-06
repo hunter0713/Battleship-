@@ -13,12 +13,11 @@ Player::Player(int shipNums,string name)
         ownShips[i-1] = tempShip;
       }
       placeShips();
-      ownBoard.printBoard();
       namee = name;
   }
 Player::~Player()
 {
-
+  delete[] ownShips;
 }
 Board Player::getBoard(char choice)
 {
@@ -59,11 +58,23 @@ void Player::placeShips()
       validY = true;
       char xTemp = ' ';
       string playerShot = "";
-    LOOP:    cout<<"Input a position for the front of the ship: ";
-        cin >> playerShot;
-      xTemp = tolower(playerShot.at(0));
-      yVal = playerShot.at(1);
-
+      bool validInput= 1;
+      do
+      {
+      LOOP:cout<<"Input a position for the front of the ship: ";
+      cin >> playerShot;
+      validInput= 1;
+        try
+        {
+          xTemp = tolower(playerShot.at(0));
+          yVal = playerShot.at(1);
+        }
+        catch(...)
+        {
+          cout<<"Position must be in format: 'a1'\n";
+          validInput = 0;
+        }
+      }while(validInput == 0);
           switch (xTemp)
       	{
                  case 'a':
@@ -198,7 +209,7 @@ bool Player::fireShot(int row, int col, Player &target)
 
 void Player::receiveHit(int xPos, int yPos)
 {
-
+ownBoard.setPos(yPos, xPos, 'h');
   for (int i = 0; i < numShips; i++)
   {
     if (ownShips[i].coordCheck(xPos, yPos))

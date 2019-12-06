@@ -1,4 +1,5 @@
 #include "gameManager.h"
+#include <cctype>
 using namespace std;
 
 
@@ -25,10 +26,11 @@ void gameManager::run()
 void gameManager::playerMenu()
 {
   playerChoice = 'f';
+  char playerInput = ' ';
   cout << "\n===============================================================\n===============================================================\n";
   cout << "===WELCOME TO BATTLESHIP!======================================" << endl <<
   "===============================================================\n===============================================================\n";
-  while(start != true)
+  while(start != true && !(isdigit(playerInput)))
     {
       cout<< "\n===============================================================";
       cout<< "\n1.) Start Game" << endl <<
@@ -36,7 +38,14 @@ void gameManager::playerMenu()
       "3.) Close Game\n===============================================================" << endl;
       cout<<">> ";
 
-      cin >> playerChoice;
+      cin >> playerInput;
+      /*if (playerInput.length() > 1)
+      {
+        cout<< "Input too long, just 1 character please!\n";
+      }*/
+
+        playerChoice = playerInput;
+
 
       if(playerChoice == '1')
         {
@@ -48,9 +57,11 @@ void gameManager::playerMenu()
             cout << "Please input new number of ships to play (must be between 1 and 5): ";
             cin >> numOfShips;
 
-            if (numOfShips < 1 || numOfShips > 5)
+            if (numOfShips < 1 || numOfShips > 5 || cin.fail())
             {
               cout<<"\nERROR: Invalid Input!\n";
+              cin.clear();
+              cin.ignore();
             }
           } while(numOfShips < 1 || numOfShips > 5);
 
@@ -65,7 +76,7 @@ void gameManager::playerMenu()
     else
       {
         cout << "Invalid Menu Choice! Please Choose Again.\n>> ";
-        std::cin >> playerChoice;
+        cin >> playerChoice;
       }
     }
   if(start == true)
@@ -75,16 +86,20 @@ void gameManager::playerMenu()
 }
 void gameManager::gameLoop()
 {
+  string s = "";
   cout<< "Player 1, Set Your Ships!\n";
   Player p1(numOfShips,"Player 1");
   //BUNCH OF NEW LINES SO PLAYERS BOARDS Stay PRIVATE in FULLSCREEN GAMEPLAY
+  cout << "Press any key(AND ENTER) to begin setting up player 2's board: \n";
+  cin >> s;
   cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
   //BUNCH OF NEW LINES SO PLAYERS BOARDS Stay PRIVATE in FULLSCREEN GAMEPLAY
   cout<< "Player 2, Set Your Ships!\n";
   Player p2(numOfShips ,"Player 2");
   //BUNCH OF NEW LINES SO PLAYERS BOARDS Stay PRIVATE in FULLSCREEN GAMEPLAY
+  cout << "Press any key(AND ENTER) to finish board setup: \n";
+  cin >> s;
   cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
-  string s = "";
   while(!p1.isDead() && !p2.isDead())
   {
     cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
@@ -139,12 +154,11 @@ do
   cin >> playerShot;
   while(playerShot.length() != 2)
   {
-    cout << "Enter space to fire at: ";
+    cout << "Enter a valid space to fire at (valid spaces follow format 'a1'): ";
     cin >> playerShot;
   }
   xTemp = tolower(playerShot.at(0));
   yVal = playerShot.at(1);
-
     switch (xTemp)
 	{
            case 'a':
@@ -209,6 +223,7 @@ do
 	}
   if (p.getBoard('e').getPos(yVal, xVal) == 'm' || p.getBoard('e').getPos(yVal, xVal) == 'h')
   {
+    cout << "Already fired here!\n";
     validX = false;
     validY = false;
   }
